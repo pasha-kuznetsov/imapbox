@@ -69,7 +69,7 @@ class MailboxClient:
     def saveEmail(self, data):
         for response_part in data:
             if isinstance(response_part, tuple):
-                msg = email.message_from_string(response_part[1].decode("utf-8"))
+                msg = email.message_from_bytes(response_part[1])
                 directory = self.getEmailFolder(msg, data[0][1])
 
                 if os.path.exists(directory):
