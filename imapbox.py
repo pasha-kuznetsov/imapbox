@@ -10,7 +10,9 @@ import os
 
 def load_configuration(args):
     config = configparser.ConfigParser(allow_no_value=True)
-    config.read(['/etc/imapbox/config.cfg', os.path.expanduser('~/.config/imapbox/config.cfg')])
+    config.read([args.config]
+                if args.config
+                else ['/etc/imapbox/config.cfg', os.path.expanduser('~/.config/imapbox/config.cfg')])
 
     options = {
         'days': None,
@@ -79,6 +81,7 @@ def main():
     argparser.add_argument('-d', dest='days', help="Number of days back to get in the IMAP account", type=int)
     argparser.add_argument('-w', dest='wkhtmltopdf', help="The location of the wkhtmltopdf binary")
     argparser.add_argument('-a', dest='specific_account', help="Select a specific account to backup")
+    argparser.add_argument('-c', dest='config', help="Config file location")
     args = argparser.parse_args()
     options = load_configuration(args)
 
