@@ -3,7 +3,7 @@
 
 from __future__ import print_function
 
-import imaplib, email
+import imaplib, email, email.utils
 import re
 import os
 import hashlib
@@ -57,10 +57,10 @@ class MailboxClient:
 
         year = 'None'
         if msg['Date']:
-            match = re.search('\d{1,2}\s\w{3}\s(\d{4})', msg['Date'])
-            if match:
-                year = match.group(1)
-
+            date = email.utils.parsedate_to_datetime(msg['Date'])
+            if date:
+                year = os.path.join(str(date.year), '{:02d}'.format(date.month), '{:02d}'.format(date.day))
+                foldername = '{:02d}-{:02d}.{}'.format(date.hour, date.minute, foldername)
 
         return os.path.join(self.local_folder, year, foldername)
 
@@ -93,6 +93,6 @@ class MailboxClient:
                         print("MailboxClient.saveEmail() failed:", e.strerror)
                     else:
                         print("MailboxClient.saveEmail() failed")
-                        print(e)
+                    print(e)
 
         return True
